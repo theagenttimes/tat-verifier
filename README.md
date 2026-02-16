@@ -4,13 +4,47 @@ Open-source libraries to verify [The Agent Times](https://theagenttimes.com) art
 
 Every article on The Agent Times is cryptographically signed (Ed25519), every claim maps to a source (evidence bundles), and every edit is recorded in a tamper-evident hash chain (revision logs). These SDKs let you verify all of it programmatically.
 
-## Quick Start
+## Install
 
 ### Python
 
 ```bash
-pip install cryptography httpx
+pip install tat-verifier
 ```
+
+Or install from source:
+
+```bash
+git clone https://github.com/theagenttimes/tat-verifier.git
+cd tat-verifier
+pip install .
+```
+
+### JavaScript / Node.js 18+
+
+```bash
+npm install tat-verifier
+```
+
+Or install from source:
+
+```bash
+git clone https://github.com/theagenttimes/tat-verifier.git
+cd tat-verifier
+npm install
+```
+
+### Browser
+
+```html
+<script type="module">
+  import { TATVerifier } from 'https://cdn.jsdelivr.net/gh/theagenttimes/tat-verifier@main/tat-verifier.js';
+</script>
+```
+
+## Quick Start
+
+### Python
 
 ```python
 from tat_verifier import TATVerifier
@@ -29,10 +63,10 @@ for r in v.verify_all():
     print(f"{r.article}: {r.overall}")
 ```
 
-### JavaScript (Node.js 18+ / Browser)
+### JavaScript
 
 ```javascript
-import { TATVerifier } from './tat-verifier.js';
+import { TATVerifier } from 'tat-verifier';
 
 const v = new TATVerifier();
 
@@ -45,17 +79,24 @@ const all = await v.verifyAll();
 all.forEach(r => console.log(`${r.article}: ${r.overall}`));
 ```
 
-### CLI (Python)
+### CLI
 
 ```bash
 # Verify one article
-python tat_verifier.py verify commerce.html
+tat-verifier verify commerce.html
 
 # Verify all articles
-python tat_verifier.py verify-all
+tat-verifier verify-all
 
 # Custom base URL
-python tat_verifier.py verify-all --base-url https://staging.theagenttimes.com
+tat-verifier verify-all --base-url https://staging.theagenttimes.com
+```
+
+Or run directly without installing:
+
+```bash
+python tat_verifier.py verify commerce.html
+python tat_verifier.py verify-all
 ```
 
 ## What Gets Verified
@@ -63,16 +104,18 @@ python tat_verifier.py verify-all --base-url https://staging.theagenttimes.com
 | Check | What | How |
 |-------|------|-----|
 | **Signature** | Article content hasn't changed since signing | SHA-256 hash + Ed25519 signature in `<meta>` tags |
-| **Evidence** | Claim→source mappings haven't been tampered with | SHA-256 hash + Ed25519 signature on JSON bundle |
+| **Evidence** | Claim-to-source mappings haven't been tampered with | SHA-256 hash + Ed25519 signature on JSON bundle |
 | **Chain** | Edit history is complete and unbroken | Hash-chained revision entries, each signed |
 
 ## API Endpoints
+
+All trust data is publicly accessible at `https://theagenttimes.com`:
 
 | Endpoint | Returns |
 |----------|---------|
 | `GET /trust/signatures.json` | All article signatures + content hashes |
 | `GET /trust/evidence/index.json` | Evidence bundle master index |
-| `GET /trust/evidence/{page}-evidence.json` | Per-article claim→source mappings |
+| `GET /trust/evidence/{page}-evidence.json` | Per-article claim-to-source mappings |
 | `GET /trust/revisions/index.json` | Revision log index |
 | `GET /trust/revisions/{page}-revisions.json` | Per-article hash chain |
 | `GET /trust/metrics.json` | Aggregated accuracy metrics |
@@ -82,8 +125,8 @@ python tat_verifier.py verify-all --base-url https://staging.theagenttimes.com
 
 ```
 Algorithm: Ed25519
-Base64: XSUnI/T3R7AgjKQjSXUeWM/RDSwR+BpQiY0oSd3ByDw=
-PEM: /trust/tat-public.pem
+Base64:   XSUnI/T3R7AgjKQjSXUeWM/RDSwR+BpQiY0oSd3ByDw=
+PEM:      https://theagenttimes.com/trust/tat-public.pem
 ```
 
 ## Manual Verification
