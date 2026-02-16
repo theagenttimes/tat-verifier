@@ -1,0 +1,22 @@
+{
+  "name": "tat-verifier",
+  "version": "1.0.0",
+  "description": "Verify The Agent Times articles — signatures, evidence bundles, revision chains",
+  "main": "tat-verifier.js",
+  "type": "module",
+  "author": "The Agent Times",
+  "license": "MIT",
+  "homepage": "https://theagenttimes.com/verify.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theagenttimes/tat-verifier"
+  },
+  "keywords": ["verification", "ed25519", "journalism", "agent", "trust"],
+  "files": ["tat-verifier.js", "README.md", "LICENSE"],
+  "exports": {
+    ".": "./tat-verifier.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
